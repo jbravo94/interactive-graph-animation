@@ -5,20 +5,19 @@
         }
     </style>
 
-    <script src="//unpkg.com/3d-force-graph"></script>
-    <script type="importmap">{ "imports": { "three": "https://unpkg.com/three/build/three.module.js" }}</script>
+    <script src="//unpkg.com/3d-force-graph@1.71.4"></script>
+    <script type="importmap">{ "imports": { "three": "https://unpkg.com/three@0.152.2/build/three.module.js" }}</script>
 </head>
 
 <body>
     <div id="3d-graph"></div>
 
     <script type="module">
-        import { UnrealBloomPass } from '//unpkg.com/three/examples/jsm/postprocessing/UnrealBloomPass.js';
-        import { CSS2DRenderer, CSS2DObject } from '//unpkg.com/three/examples/jsm/renderers/CSS2DRenderer.js';
+        import { UnrealBloomPass } from '//unpkg.com/three@0.152.2/examples/jsm/postprocessing/UnrealBloomPass.js';
+        import { CSS2DRenderer, CSS2DObject } from '//unpkg.com/three@0.152.2/examples/jsm/renderers/CSS2DRenderer.js';
 
         let isRotationActive = true;
         const distance = 500;
-
         let firstClickDone = false;
 
         const elem = document.getElementById('3d-graph');
@@ -45,7 +44,6 @@
             extraRenderers: [new CSS2DRenderer()]
         })
             (elem)
-            .jsonUrl('miserables.json')
             .nodeLabel('id')
             .nodeAutoColorBy('group')
             .onNodeClick(node => {
@@ -92,6 +90,21 @@
                 angle += Math.PI / 300 / 4;
             }
         }, 10);
+
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        const data = urlParams.get('data');
+        const isDAG = urlParams.get('dag');
+
+        if (data) {
+            Graph.graphData(JSON.parse(data));
+        } else {
+            Graph.jsonUrl('data.json');
+        }
+
+        if (isDAG) {
+            Graph.dagMode('td').dagLevelDistance(30);
+        }
 
     </script>
 </body>
