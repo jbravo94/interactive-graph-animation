@@ -14,3 +14,6 @@ http://localhost:8000/?dag=true&data={"nodes":[{"id":"Software","group":1},{"id"
 * https://github.com/vasturiano/3d-force-graph/blob/master/example/pause-resume/index.html
 * https://github.com/vasturiano/3d-force-graph/blob/master/example/bloom-effect/index.html
 * https://github.com/vasturiano/3d-force-graph/blob/master/example/click-to-focus/index.html
+* https://github.com/vasturiano/3d-force-graph/blob/master/example/fit-to-canvas/index.html
+* https://github.com/vasturiano/3d-force-graph/blob/master/example/directional-links-particles/index.html
+* https://github.com/vasturiano/3d-force-graph/blob/master/example/manipulate-link-force/index.html

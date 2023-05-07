@@ -17,8 +17,9 @@
         import { CSS2DRenderer, CSS2DObject } from '//unpkg.com/three@0.152.2/examples/jsm/renderers/CSS2DRenderer.js';
 
         let isRotationActive = true;
-        const distance = 500;
+        const distance = 300;
         let firstClickDone = false;
+        let angle = 0;
 
         const elem = document.getElementById('3d-graph');
 
@@ -65,31 +66,32 @@
                 nodeEl.textContent = node.id;
                 nodeEl.style.color = node.color;
                 nodeEl.style.fontFamily = 'monospace';
+                nodeEl.style.fontSize = 15;
                 nodeEl.style.background = 'rgba(255, 255, 255, 0.9)';
-                nodeEl.style.borderRadius = '10px 10px 10px 10px';
+                nodeEl.style.borderRadius = '20px 20px 20px 20px';
                 nodeEl.style.padding = '3px';
                 nodeEl.className = 'node-label';
                 return new CSS2DObject(nodeEl);
             })
-            .nodeThreeObjectExtend(true);
+            .nodeThreeObjectExtend(true)
+            .cooldownTicks(100)
+            .linkDirectionalParticles("value")
+            .linkDirectionalParticleWidth(1)
+            .linkDirectionalParticleSpeed(d => d.value * 0.01)
+            .nodeRelSize(10)
+            .linkWidth(0);
+
+        Graph.cameraPosition(
+            { x: 0, y: 0, z: distance },
+            { x: 0, y: 0, z: 0 },
+            400
+        );
 
         const bloomPass = new UnrealBloomPass();
         bloomPass.strength = 1;
         bloomPass.radius = 1;
         bloomPass.threshold = 0.1;
         Graph.postProcessingComposer().addPass(bloomPass);
-
-        let angle = 0;
-
-        setInterval(() => {
-            if (isRotationActive) {
-                Graph.cameraPosition({
-                    x: distance * Math.sin(angle),
-                    z: distance * Math.cos(angle)
-                });
-                angle += Math.PI / 300 / 4;
-            }
-        }, 10);
 
         const queryString = window.location.search;
         const urlParams = new URLSearchParams(queryString);
@@ -105,6 +107,18 @@
         if (isDAG) {
             Graph.dagMode('td').dagLevelDistance(30);
         }
+
+        Graph.onEngineStop(() => {
+            setInterval(() => {
+                if (isRotationActive) {
+                    Graph.cameraPosition({
+                        x: distance * Math.sin(angle),
+                        z: distance * Math.cos(angle)
+                    });
+                    angle += Math.PI / 300 / 4;
+                }
+            }, 10);
+        });
 
     </script>
 </body>
